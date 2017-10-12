@@ -19,4 +19,9 @@ public class StringCalculatorTest {
         assertEquals(1, stringCalculator.add("1"));
         assertEquals(3, stringCalculator.add("1,2"));
     }
+
+    @Test
+    public void addNewLineDelim() throws Exception {
+        assertEquals(3, stringCalculator.add("1\n2"));
+    }
 }
