@@ -34,4 +34,22 @@ public class StringCalculatorTest {
             fail("Wrong string has parsed");
         } catch (NumberFormatException nfe) {}
     }
+      
+    @Test
+    public void addChangeDelim() throws Exception {
+        assertEquals(3, stringCalculator.add("//;\n1;2"));
+    }
+
+    @Test
+    public void addNegatives() throws Exception {
+        try {
+            assertEquals(0, stringCalculator.add("-1,-2\n-3"));
+        } catch (Exception e) {
+            String message = e.getMessage();
+            String prefix = "negatives not allowed ";
+            assertTrue(message.startsWith(prefix));
+            assertEquals("[-1, -2, -3]", message.substring(prefix.length()));
+
+        }
+    }
 }

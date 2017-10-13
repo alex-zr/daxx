@@ -10,6 +10,7 @@ public class StringCalculator {
         }
 
         List<String> strNumbers = parseNumbersStr(numbers);
+        checkIfNegativesPresentThrowError(strNumbers);
 
         return strNumbers.stream()
                 .mapToInt(Integer::parseInt)
@@ -39,10 +40,23 @@ public class StringCalculator {
         List<String> res = Collections.singletonList(str);
         for (String delim : delimsList) {
             res = res.stream()
-                    .flatMap(s -> Arrays.stream(s.split("["+delim+"]+", -1)))
+                    .flatMap(s -> Arrays.stream(s.split("[" + delim + "]+", -1)))
                     .collect(Collectors.toList());
         }
 
         return res;
+    }
+
+
+    private void checkIfNegativesPresentThrowError(List<String> strNumbers) {
+        List<Integer> negatives = strNumbers.stream()
+                .mapToInt(Integer::parseInt)
+                .filter(n -> n < 0)
+                .boxed()
+                .collect(Collectors.toList());
+
+        if (!negatives.isEmpty()) {
+            throw new RuntimeException("negatives not allowed " + negatives);
+        }
     }
 }
