@@ -23,5 +23,15 @@ public class StringCalculatorTest {
     @Test
     public void addNewLineDelim() throws Exception {
         assertEquals(3, stringCalculator.add("1\n2"));
+
+        try {
+            assertEquals(3, stringCalculator.add("1,"));
+            fail("Wrong string has parsed");
+        } catch (NumberFormatException nfe) {}
+        
+        try {
+            stringCalculator.add("1,\n");
+            fail("Wrong string has parsed");
+        } catch (NumberFormatException nfe) {}
     }
 }
