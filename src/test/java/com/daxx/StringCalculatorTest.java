@@ -52,4 +52,9 @@ public class StringCalculatorTest {
 
         }
     }
+
+    @Test
+    public void addBigNumbers() throws Exception {
+        assertEquals(3, stringCalculator.add("1000,2,1001"));
+    }
 }

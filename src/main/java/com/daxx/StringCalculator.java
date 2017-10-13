@@ -14,6 +14,7 @@ public class StringCalculator {
 
         return strNumbers.stream()
                 .mapToInt(Integer::parseInt)
+                .map(i -> i >= 1000 ? i - 1000 : i)
                 .sum();
     }
 
