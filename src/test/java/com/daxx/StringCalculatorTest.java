@@ -57,4 +57,11 @@ public class StringCalculatorTest {
     public void addBigNumbers() throws Exception {
         assertEquals(3, stringCalculator.add("1000,2,1001"));
     }
+
+    @Test
+    public void addDelimiters() throws Exception {
+        assertEquals(33, stringCalculator.add("//[*][%]\n1*2%30"));
+        assertEquals(103, stringCalculator.add("//[***]\n1001***2***1100"));
+        assertEquals(105, stringCalculator.add("//[***][rr][----]\n1001***2rr1100----2"));
+    }
 }

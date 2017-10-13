@@ -1,7 +1,11 @@
 package com.daxx;
 
-import java.util.*;
+import java.util.List;
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StringCalculator {
     public int add(String numbers) {
@@ -24,16 +28,15 @@ public class StringCalculator {
         List<String> delimsList = Arrays.asList(",", "\n");
 
         if (numbers.startsWith("//")) {
-            String delimiterStr = getDelimiterString(numbers);
-            String delim = delimiterStr.substring(2);
-            numbers = numbers.substring(delimiterStr.length() + 1);
-            delimsList = Arrays.asList(delim, "\n");
+            String delimitersStr = getDelimitersString(numbers);
+            delimsList = getDelimitersAsList(delimitersStr);
+            numbers = numbers.substring(delimitersStr.length() + 1);
         }
         strNumbers = split(numbers, delimsList);
         return strNumbers;
     }
 
-    private String getDelimiterString(String numbers) {
+    private String getDelimitersString(String numbers) {
         return numbers.substring(0, numbers.indexOf("\n"));
     }
 
@@ -48,7 +51,6 @@ public class StringCalculator {
         return res;
     }
 
-
     private void checkIfNegativesPresentThrowError(List<String> strNumbers) {
         List<Integer> negatives = strNumbers.stream()
                 .mapToInt(Integer::parseInt)
@@ -59,5 +61,37 @@ public class StringCalculator {
         if (!negatives.isEmpty()) {
             throw new RuntimeException("negatives not allowed " + negatives);
         }
+    }
+
+    private List<String> getDelimitersAsList(String numbers) {
+        numbers = numbers.substring(2);
+        if (!numbers.startsWith("[")) {
+            if (numbers.length() != 1) {
+                throw new RuntimeException("Delimiters format error " + numbers);
+            }
+            return Collections.singletonList(numbers);
+        }
+        boolean isDelimFormatError = Arrays.stream(new String[] {numbers})
+                .flatMap(this::splitDelims)
+                .filter(s -> !s.startsWith("[") || !s.endsWith("]"))
+                .collect(Collectors.toList()).isEmpty();
+
+        if (isDelimFormatError) {
+            throw new RuntimeException("Delimiters format error " + numbers);
+        }
+        return Arrays.stream(new String[]{numbers})
+                .flatMap(this::splitDelims)
+                .collect(Collectors.toList());
+    }
+
+    private Stream<String> splitDelims(String str) {
+        List<String> res = new LinkedList<>();
+        while (str.startsWith("[")) {
+            String delim = str.substring(1, str.indexOf("]"));
+            res.add(delim);
+            str = str.substring(delim.length() + 2);
+        }
+
+        return res.stream();
     }
 }
